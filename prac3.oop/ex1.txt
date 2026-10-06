@@ -1,0 +1,20 @@
+﻿Console.OutputEncoding = System.Text.Encoding.UTF8;
+Console.InputEncoding = System.Text.Encoding.UTF8;
+Console.WriteLine("--- Singleton ---");
+Console.WriteLine("Значення почтакове: " + Counter.Instance.Value);
+Counter.Instance.Value++;
+Console.WriteLine("Значення після збільшення: " + Counter.Instance.Value);
+var other = Counter.Instance;
+Console.WriteLine("Значення через змінну: " + other.Value);
+other.Value++;
+Console.WriteLine("Збільшення значення й визов через змінну(other): " + other.Value);
+Console.WriteLine("Значення через клас(Counter): " + Counter.Instance.Value);
+Console.ReadKey();
+
+public sealed class Counter
+{
+    private static readonly Counter _instance = new Counter();
+    public static Counter Instance => _instance;
+    private Counter() { }
+    public int Value;
+}

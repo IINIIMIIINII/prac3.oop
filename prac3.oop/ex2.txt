@@ -1,0 +1,32 @@
+﻿Console.OutputEncoding = System.Text.Encoding.UTF8;
+Console.InputEncoding = System.Text.Encoding.UTF8;
+Console.WriteLine("--- Adapter ---");
+var old = new OldFahrenheitSensor();
+Console.WriteLine("Температура початкова (F): " + old.GetFahrenheit());
+ICelsiusSensor sensor = new SensorAdapter(old);
+Console.WriteLine("Адаптивна температура в цельсіях (C): " + sensor.GetCelsius().ToString("F1"));
+old.Fahrenheit = 212;
+Console.WriteLine("Зміна температури (F): " + old.GetFahrenheit());
+Console.WriteLine("Адаптивна температура в цельсіях (C): " + sensor.GetCelsius().ToString("F1"));
+old.Fahrenheit = 32;
+Console.WriteLine("Зміна температури(F): " + old.GetFahrenheit());
+Console.WriteLine("Адаптивна температура в цельсіях (C): " + sensor.GetCelsius().ToString("F1"));
+Console.ReadKey();
+
+public interface ICelsiusSensor
+{
+    double GetCelsius();
+}
+
+public class OldFahrenheitSensor
+{
+    public double Fahrenheit = 98.6;
+    public double GetFahrenheit() => Fahrenheit;
+}
+
+public class SensorAdapter : ICelsiusSensor
+{
+    private readonly OldFahrenheitSensor _old;
+    public SensorAdapter(OldFahrenheitSensor old) { _old = old; }
+    public double GetCelsius() => (_old.GetFahrenheit() - 32) * 5 / 9;
+}

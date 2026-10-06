@@ -1,0 +1,26 @@
+﻿Console.OutputEncoding = System.Text.Encoding.UTF8;
+Console.InputEncoding = System.Text.Encoding.UTF8;
+Console.WriteLine("--- Strategy ---");
+var order = new Order(new NoDiscount());
+Console.WriteLine("Ціна 1000 грн");
+Console.WriteLine("Без знижки: " + order.Total(1000));
+order.SetDiscount(new TenPercent());
+Console.WriteLine("-10%: " + order.Total(1000));
+order.SetDiscount(new Minus150());
+Console.WriteLine("-150 грн: " + order.Total(1000));
+Console.ReadKey();
+
+public interface IDiscount
+{
+    decimal Apply(decimal price);
+}
+public class NoDiscount : IDiscount { public decimal Apply(decimal p) => p; }
+public class TenPercent : IDiscount { public decimal Apply(decimal p) => p * 0.9m; }
+public class Minus150 : IDiscount { public decimal Apply(decimal p) => p - 150; }
+public class Order
+{
+    private IDiscount _discount;
+    public Order(IDiscount discount) { _discount = discount; }
+    public void SetDiscount(IDiscount discount) { _discount = discount; }
+    public decimal Total(decimal price) => _discount.Apply(price);
+}
